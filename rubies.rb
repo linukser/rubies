@@ -13,6 +13,7 @@ class Player
     @height = 40
     @speed = 5
     @color = color
+    @blue_player_image = Gosu::Image.new("data/sprites/players/blue-player.png", :tileable => true)
   end
 
   def move_left
@@ -32,7 +33,8 @@ class Player
   end
 
   def draw
-    @window.draw_quad(@x, @y, @color, @x + @width, @y, @color, @x + @width, @y + @height, @color, @x, @y + @height, @color)
+    #@window.draw_quad(@x, @y, @color, @x + @width, @y, @color, @x + @width, @y + @height, @color, @x, @y + @height, @color)
+    @blue_player_image.draw(@x, @y, 0, scale_x = 0.15, scale_y = 0.15)
   end
 end
 
@@ -72,29 +74,33 @@ class Monster
 end
 
 class GameWindow < Gosu::Window
-  WIDTH = 2560
-  HEIGHT = 1600
-  #WIDTH = 1920
-  #HEIGHT = 1080
+  #WIDTH = 2560
+  #HEIGHT = 1600
+  WIDTH = 1920
+  HEIGHT = 1080
 
   def initialize
     super(WIDTH, HEIGHT)
-    #self.caption = "Ruby Shooter"
-    self.caption = "Tapty"
+    #super(WIDTH, HEIGHT, true) #true is for full screen
+    self.caption = "Rubies"
+    @background_image = Gosu::Image.new("data/graphics/rubies-menu-screen.png", :tileable => true)
+    #@blue_player_image = Gosu::Image.new("data/sprites/players/blue-player.png", :tileable => true)
     reset_game
   end
 
   def reset_game
-    @player1 = Player.new(self, 1960, 800, Gosu::Color::GREEN)
-    @player2 = Player.new(self,  600, 800, Gosu::Color::YELLOW)
-    #@player1 = Player.new(self, 100, 100, Gosu::Color::GREEN)
-    #@player2 = Player.new(self, 700, 500, Gosu::Color::YELLOW)
+    #@player1 = Player.new(self, 1960, 800, Gosu::Color::GREEN)
+    #@player2 = Player.new(self,  600, 800, Gosu::Color::YELLOW)
+    @player1 = Player.new(self, 1450, 800, Gosu::Color::GREEN)
+    @player2 = Player.new(self,  440, 800, Gosu::Color::YELLOW)
     @players = [@player1, @player2]
     @monsters = Array.new(5) { Monster.new(self, rand(WIDTH), rand(HEIGHT)) }
   end
 
   def update
     if Gosu.button_down?(Gosu::KB_ESCAPE)
+      close
+    elsif Gosu.button_down?(Gosu::KB_Q)
       close
     elsif Gosu.button_down?(Gosu::KB_F12)
       reset_game
@@ -116,9 +122,13 @@ class GameWindow < Gosu::Window
   end
 
   def draw
+    @background_image.draw(0, 0, 0, width.to_f / @background_image.width, height.to_f / @background_image.height)
+    #@blue_player_image.draw(0, 0, 0, width.to_f / @blue_player_image.width, height.to_f / @blue_player_image.height)
+    #@blue_player_image.draw(0, 0, 0, 500, 500)
+    #@blue_player_image.draw(350, 350, 350, scale_x = 0.15, scale_y = 0.15)
     @player1.draw
     @player2.draw
-    @monsters.each { |monster| monster.draw }
+    #@monsters.each { |monster| monster.draw }
   end
 end
 
